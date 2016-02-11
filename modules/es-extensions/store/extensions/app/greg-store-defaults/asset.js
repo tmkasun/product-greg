@@ -98,6 +98,14 @@ asset.renderer = function(ctx) {
                     page.downloadMetaData.url = config.server.https+'/governance/'+pluralType+'/'+page.assets.id+'/content?tenantId='+ctx.tenantId;
                 }
             }
+	    versions: function (page) {
+                if (page.meta.pageName !== 'details') {
+                    return;
+                }
+
+                var type = page.assets.type;
+                page.assetVersions = gregAPI.getAssetVersions(ctx.session, ctx.assetType, page.assets.path, page.assets.name);
+            }
         }
     }
 }
