@@ -31,7 +31,7 @@ public class RXTModifier {
     private static String serverURL;
     private static final String fileSeparator = File.separator + File.separator + File.separator;
     private static final String serviceRxtPath =
-            "/_system/governance/repository/components/org.wso2.carbon.governance/types/";
+            "/repository/components/org.wso2.carbon.governance/types/";
 
     private static void setSystemProperties() {
         StringBuilder builder = new StringBuilder();
@@ -66,17 +66,10 @@ public class RXTModifier {
             ConfigurationContext configContext = ConfigurationContextFactory
                     .createConfigurationContextFromFileSystem(axis2Configuration);
 
-            Registry registry = new WSRegistryServiceClient(
-                    serverURL, username,
-                    password, configContext) {
-                public void setCookie(String cookie) {
-                    RXTModifier.cookie = cookie;
-                    super.setCookie(cookie);
-                }
-            };
+            Registry govRegistry = GovernanceUtils.getGovernanceUserRegistry(registry, username);
 
-            backUpRXTs(registry,serviceRxtPath + "restservice.rxt", "restserviceExisting.rxt");
-            backUpRXTs(registry, serviceRxtPath + "soapservice.rxt", "soapserviceExisting.rxt");
+            backUpRXTs(govRegistry, serviceRxtPath + "restservice.rxt", "restserviceExisting.rxt");
+            backUpRXTs(govRegistry, serviceRxtPath + "soapservice.rxt", "soapserviceExisting.rxt");
             ResourceServiceClient resourceServiceClient = new ResourceServiceClient(cookie,
                     serverURL, configContext);
             String restServiceRxtPath = serviceRxtPath + "restservice.rxt";
